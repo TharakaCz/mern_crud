@@ -10,6 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+//Create a user
 app.post('/create', async (request, response) => {
   try {
     if(!request.body.first_name || !request.body.last_name || !request.body.email || !request.body.password){
@@ -33,6 +34,64 @@ app.post('/create', async (request, response) => {
   }
 });
 
+//Get users list
+app.get('/users', async (request, response) => {
+  try {
+    const users = await User.find({});
+    return response.status(200).json({
+      count: users.length,
+      data: users, 
+    });
+  } catch (error) {
+    console.log(error.message);
+    response.status(500).send({message: error.message});
+  }
+});
+
+//Find a user
+app.get('/user/:id', async (request, response) => {
+  try {
+    const {id} = request.params;
+    const user = await User.findById(id);
+    return response.status(200).send(user);
+  } catch (error) {
+    console.log(error.message);
+    response.status(500).send({message: error.message});
+  }
+});
+
+//Update User
+app.put('/user/:id', async (request, response) => {
+  try {
+    if(!request.body.first_name || !request.body.last_name || !request.body.email){
+      return response.status(400).send({message: 'Send all required fields: First Name, Last Name, Email, Password'});
+    }
+    const {id} = request.params;
+    const result = await User.findByIdAndUpdate(id, request.body);
+    if(!result){
+      return response.send(404).json({message: 'User not found.'});
+    }
+    return response.send(200).json({message: 'User updated successfully.'});
+  } catch (error) {
+    console.log(error.message);
+    response.status(500).send({message: error.message});
+  }
+});
+
+//Delete User
+app.delete('/user/:id', async (request, response) => {
+try {
+  const {id} = request.params;
+  const result = await User.findByIdAndDelete(id);
+  if(!result){
+    return response.send(404).json({message: 'User not found.'});
+  }
+  return response.send(200).json({message: 'User delete successfully.'});
+} catch (error) {
+  console.log(error.message);
+    response.status(500).send({message: error.message});
+}
+});
 
 mongoose
   .connect(mongoDBURL)
