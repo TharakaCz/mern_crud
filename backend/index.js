@@ -64,7 +64,7 @@ app.get('/user/:id', async (request, response) => {
 app.put('/user/:id', async (request, response) => {
   try {
     if(!request.body.first_name || !request.body.last_name || !request.body.email){
-      return response.status(400).send({message: 'Send all required fields: First Name, Last Name, Email, Password'});
+      return response.status(400).send({message: 'Send all required fields: First Name, Last Name, Email'});
     }
     const {id} = request.params;
     const result = await User.findByIdAndUpdate(id, request.body);
