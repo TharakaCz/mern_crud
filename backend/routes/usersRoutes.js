@@ -2,10 +2,10 @@ import express from "express";
 import sha1 from "js-sha1";
 import { User } from "./../models/userModel.js";
 
-const usersRoutes = express.Router();
+const router = express.Router();
 
 //Create a user
-usersRoutes.post("/", async (request, response) => {
+router.post("/", async (request, response) => {
   try {
     if (
       !request.body.first_name ||
@@ -38,7 +38,7 @@ usersRoutes.post("/", async (request, response) => {
 });
 
 //Get users list
-usersRoutes.get("/", async (request, response) => {
+router.get("/", async (request, response) => {
   try {
     const users = await User.find({});
     return response.status(200).json({
@@ -52,7 +52,7 @@ usersRoutes.get("/", async (request, response) => {
 });
 
 //Find a user
-usersRoutes.get("/:id", async (request, response) => {
+router.get("/:id", async (request, response) => {
   try {
     const { id } = request.params;
     const user = await User.findById(id);
@@ -64,7 +64,7 @@ usersRoutes.get("/:id", async (request, response) => {
 });
 
 //Update User
-usersRoutes.put("/:id", async (request, response) => {
+router.put("/:id", async (request, response) => {
   try {
     if (
       !request.body.first_name ||
@@ -90,7 +90,7 @@ usersRoutes.put("/:id", async (request, response) => {
 });
 
 //Delete User
-usersRoutes.delete("/:id", async (request, response) => {
+router.delete("/:id", async (request, response) => {
   try {
     const { id } = request.params;
     const result = await User.findByIdAndDelete(id);
@@ -104,4 +104,4 @@ usersRoutes.delete("/:id", async (request, response) => {
   }
 });
 
-export default usersRoutes;
+export default router;
