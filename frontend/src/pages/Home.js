@@ -10,19 +10,18 @@ const Home = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    setLoading(false);
+    setLoading(true);
     getData();
+    setLoading(false);
   });
-  async function getData() {
-    await axios
+   async function getData() {
+     await axios
       .get("http://localhost:8080/users")
       .then((response) => {
         setUsers(response.data.data);
-        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
-        setLoading(false);
       });
   }
   return (
